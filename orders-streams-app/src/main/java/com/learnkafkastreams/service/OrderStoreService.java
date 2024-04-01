@@ -10,5 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderStoreService {
 
+    StreamsBuilderFactoryBean streamsBuilderFactoryBean;
 
+    public OrderStoreService(StreamsBuilderFactoryBean streamsBuilderFactoryBean) {
+        this.streamsBuilderFactoryBean = streamsBuilderFactoryBean;
+    }
+
+    public ReadOnlyKeyValueStore<String, Long> orderCountStore(String storeName) {
+        return streamsBuilderFactoryBean
+                .getKafkaStreams()
+                .store(StoreQueryParameters.fromNameAndType(storeName,
+                                        QueryableStoreTypes.keyValueStore()));
+    }
 }
